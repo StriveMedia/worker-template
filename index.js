@@ -1,12 +1,11 @@
-addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event.request))
-})
-/**
- * Respond with hello worker text
- * @param {Request} request
- */
-async function handleRequest(request) {
-  return new Response('Hello worker!', {
-    headers: { 'content-type': 'text/plain' },
-  })
+import { handleFetch } from 'cf-worker-utils';
+
+async function exampleRequestHandler () {
+	return new Response('Hello from a worker!', {
+		headers: {
+			'content-type': 'text/plain',
+		}
+	});
 }
+
+handleFetch(exampleRequestHandler);
