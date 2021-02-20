@@ -1,11 +1,23 @@
 import { handleFetch } from 'cf-worker-utils';
 
-async function exampleRequestHandler () {
-	return new Response('Hello from a worker!', {
+async function exampleRequestHandler() {
+	return new Response('<!doctype html><html><head><title>Hello</title></head><body><p>Hello from a <span>worker</span>!</p></body></html>', {
 		headers: {
-			'content-type': 'text/plain',
+			'content-type': 'text/html',
 		}
 	});
 }
 
-handleFetch(exampleRequestHandler);
+async function exampleResponseHandler({ request, response }) {
+	class SpanHandler {
+		element(element) {
+			element.before('cool ');
+		}
+	}
+
+	return new HTMLRewriter()
+		.on('span', new SpanHandler())
+		.transform(response);
+}
+
+handleFetch(exampleRequestHandler, exampleResponseHandler);
